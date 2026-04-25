@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>نساجیت - پارچه‌های {{ category.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <button class="back-button" onclick="history.back()">
+        <svg viewBox="0 0 24 24" width="24" height="24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="header-logo"><span class="logo-text">دسته: {{ category.title }}</span></div>
+    </header>
+
+    <main class="main-content">
+      <div class="section-header" style="margin-top: 15px; padding: 0 15px;">
+        <h2 class="section-title">محصولات گروه {{ category.title }}</h2>
+      </div>
+      
+      <div style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        
+        {% for product in products %}
+        <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer; width: 100%; margin: 0;">
+          <div class="h-discount-badge">{% if product.discount %}{{ product.discount }}{% else %}جدید{% endif %}</div>
+          
+          {% if product.main_image %}
+            <div class="h-discount-image" style="background-image: url('{{ product.main_image.url }}'); background-size: cover; background-position: center; height: 130px;"></div>
+          {% else %}
+            <div class="h-discount-image" style="background-color: #eee; height: 130px;"></div>
+          {% endif %}
+          
+          <div class="h-discount-info">
+            <div class="h-discount-name" style="text-align: center;">{{ product.name }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <p style="grid-column: span 2; text-align: center; font-size: 13px; color: #888;">هنوز محصولی در این دسته‌بندی ثبت نشده است.</p>
+        {% endfor %}
+        
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+       <button class="nav-item active" onclick="location.href='{% url 'home' %}'">
+        <span>بازگشت به خانه</span>
+      </button>
+    </nav>
+  </div>
+</body>
+</html>

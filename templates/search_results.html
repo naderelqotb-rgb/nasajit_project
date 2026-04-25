@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>نتایج جستجو - نساجیت</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+  <div class="app-container">
+    
+    <header class="app-header">
+      <button class="back-button" onclick="history.back()">
+        <svg viewBox="0 0 24 24" width="24" height="24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="header-logo"><span class="logo-text">نتایج جستجو</span></div>
+    </header>
+
+    <main class="main-content">
+      <div class="section-header" style="margin-top: 15px; padding: 0 15px;">
+        <h3 style="font-size: 14px; color: #555;">
+          نتایج برای: <strong style="color: #00a387;">"{{ query }}"</strong>
+        </h3>
+      </div>
+      
+      <div style="padding: 15px;">
+        {% for product in products %}
+        <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer; width: 100%; margin-bottom: 15px;">
+          
+          <div class="h-discount-badge">{% if product.discount %}{{ product.discount }}{% else %}موجود{% endif %}</div>
+          
+          {% if product.main_image %}
+            <div class="h-discount-image" style="background-image: url('{{ product.main_image.url }}'); background-size: cover; background-position: center; height: 180px;"></div>
+          {% else %}
+            <div class="h-discount-image" style="background-color: #eee; height: 180px;"></div>
+          {% endif %}
+
+          <div class="h-discount-info">
+            <div class="h-discount-name">{{ product.name }}</div>
+            <div style="font-size: 13px; font-weight: bold; color: #00a387;">مشاهده گالری و جزئیات</div>
+          </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; margin-top: 50px;">
+            <svg viewBox="0 0 24 24" width="50" height="50" stroke="#ccc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <p style="font-size: 14px; color: #888; margin-top: 15px;">
+              متاسفانه پارچه‌ای با نام "{{ query }}" پیدا نشد!
+            </p>
+        </div>
+        {% endfor %}
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="location.href='{% url 'home' %}'">
+        <span>بازگشت به خانه</span>
+      </button>
+    </nav>
+    
+  </div>
+</body>
+</html>

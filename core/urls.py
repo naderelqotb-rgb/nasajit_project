@@ -25,6 +25,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', views.home, name='home'),
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
+    path('category/<slug:slug>/', views.category_detail, name='category_detail'),
+    path('search/', views.search, name='search'),
+    path('live-search/', views.live_search, name='live_search'),
 ]
 
 if settings.DEBUG:

@@ -10,9 +10,7 @@
 <body>
   <div class="app-container">
     <header class="app-header">
-      <div class="header-logo">
-        <span class="logo-text">نساجیت</span>
-      </div>
+      <div class="header-logo"><span class="logo-text">نساجیت</span></div>
     </header>
 
     <main class="main-content">
@@ -20,55 +18,41 @@
       <div class="horizontal-section" style="margin-top: 5px;">
         <div class="section-header">
           <h2 class="section-title">تخفیف ویژه</h2>
+          <span class="section-see-all" onclick="location.href='{% url 'special_offers' %}'" style="cursor: pointer;">نمایش همه</span>
         </div>
         <div class="horizontal-scroll" id="discounted-products-scroll">
-          
           {% for product in discounted_products %}
           <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer;">
             <div class="h-discount-badge">{{ product.discount }}</div>
-            
             {% if product.main_image %}
-              <div class="h-discount-image" style="background-image: url('{{ product.main_image.url }}'); background-size: cover; background-position: center;"></div>
+              <div class="h-discount-image" style="background-image: url('{{ product.main_image.url }}');"></div>
             {% else %}
               <div class="h-discount-image" style="background-color: #eee;"></div>
             {% endif %}
-
             <div class="h-discount-info">
               <div class="h-discount-name">{{ product.name }}</div>
-              <div style="font-size: 13px; font-weight: bold; color: #00a387;">تخفیف ویژه</div>
             </div>
           </div>
-          {% empty %}
-          <p style="padding: 10px; font-size: 12px;">هنوز محصول تخفیف‌داری ثبت نشده است.</p>
           {% endfor %}
-          
         </div>
       </div>
 
-      <p class="category-title" style="margin-top: 25px; border-top: 1px solid #e8e8e8; padding-top: 20px;">
-        دسته‌بندی‌ها
-      </p>
-      <section class="category-grid" id="home-category-grid">
-        
+      <p class="category-title" style="margin-top: 25px; border-top: 1px solid #e8e8e8; padding-top: 20px;">دسته‌بندی‌ها</p>
+      <section class="category-grid">
         {% for category in categories %}
         <div class="category-card" onclick="location.href='{% url 'category_detail' category.slug %}'" style="cursor: pointer;">
           <div class="category-info">
             <div class="category-label">{{ category.title }}</div>
             <div class="category-desc">{{ category.description }}</div>
           </div>
-          
           {% if category.image %}
-            <div class="category-image" style="background-image: url('{{ category.image.url }}'); background-size: cover; background-position: center;"></div>
-          {% else %}
-            <div class="category-image" style="background-color: #eee;"></div>
+            <div class="category-image" style="background-image: url('{{ category.image.url }}');"></div>
           {% endif %}
         </div>
         {% empty %}
-        <p style="text-align: center; font-size: 12px;">هنوز دسته‌بندی ثبت نشده است.</p>
+          <p style="text-align: center; color: #999;">دسته‌بندی‌ای یافت نشد.</p>
         {% endfor %}
-        
       </section>
-
     </main>
 
     <div id="search-overlay" class="search-overlay">
@@ -77,60 +61,61 @@
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
         <div class="search-input-wrapper" style="position: relative; width: 100%;">
-          <form action="{% url 'search' %}" method="GET" style="width: 100%; display: flex;">
-            <input type="text" name="q" id="search-input" class="search-input" placeholder="نام پارچه را جستجو کنید..." autocomplete="off" oninput="liveSearch(this.value)">
+          <form action="{% url 'search' %}" method="GET" style="width: 100%;">
+            <input type="text" name="q" id="search-input" class="search-input" placeholder="جستجوی پارچه..." autocomplete="off" oninput="liveSearch(this.value)">
           </form>
           
-          <div id="suggestions-box" style="position: absolute; top: 45px; left: 0; width: 100%; background: #fff; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 999; display: none; max-height: 250px; overflow-y: auto;">
+          <div id="suggestions-box" class="suggestions-box">
+            <div class="suggestions-list" id="suggestions-container"></div>
           </div>
         </div>
+      </div>
+    </div>
 
     <nav class="bottom-nav">
+      <button class="nav-item" onclick="location.href='{% url 'special_offers' %}'">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <span>پیشنهاد ویژه</span>
+      </button>
+      
       <button class="nav-item" onclick="toggleSearch(true)">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         <span>جستجو</span>
       </button>
+      
       <button class="nav-item active" onclick="location.href='{% url 'home' %}'">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" stroke="white" stroke-width="2"/></svg>
         <span>خانه</span>
       </button>
     </nav>
 
-    <script src="{% static 'js/telegram-web-app.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
-  </div>
-  <script>
+    <script>
       function liveSearch(query) {
           const box = document.getElementById('suggestions-box');
-          
-          // اگر کاربر چیزی ننوشته بود، کادر را ببند
-          if (query.length < 1) {
-              box.style.display = 'none';
-              return;
-          }
-          
-          // ارسال درخواست به پایتون در پس‌زمینه
+          const container = document.getElementById('suggestions-container');
+          if (query.length < 1) { box.style.display = 'none'; return; }
+
           fetch('/live-search/?q=' + query)
           .then(response => response.json())
           .then(data => {
-              box.innerHTML = ''; // پاک کردن نتایج قبلی
-              
+              container.innerHTML = '';
               if (data.length > 0) {
-                  // اگر محصولی پیدا شد، آن‌ها را لیست کن
                   data.forEach(item => {
-                      box.innerHTML += `<div style="padding: 12px 15px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; cursor: pointer; display: flex; align-items: center;" onclick="location.href='${item.url}'">
-                        <svg viewBox="0 0 24 24" width="16" height="16" style="margin-left: 8px;" fill="none" stroke="#00a387" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        ${item.name}
-                      </div>`;
+                      container.innerHTML += `
+                        <div class="search-suggestion-card" onclick="location.href='${item.url}'">
+                          <div class="search-suggestion-info">
+                            <div style="font-weight: bold; font-size: 15px; color: #1a1a2e;">${item.name}</div>
+                            <div style="font-size: 12px; color: #888; margin-top: 4px;">مشاهده جزئیات</div>
+                          </div>
+                          <div class="search-suggestion-img" style="background-image: url('${item.image}')"></div>
+                        </div>`;
                   });
                   box.style.display = 'block';
-              } else {
-                  // اگر پیدا نشد
-                  box.innerHTML = `<div style="padding: 12px 15px; color: #999; font-size: 13px;">هیچ پارچه‌ای یافت نشد...</div>`;
-                  box.style.display = 'block';
-              }
+              } else { box.style.display = 'none'; }
           });
       }
     </script>
+  </div>
 </body>
 </html>

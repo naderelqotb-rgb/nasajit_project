@@ -28,6 +28,7 @@ urlpatterns = [
     path('category/<slug:slug>/', views.category_detail, name='category_detail'),
     path('search/', views.search, name='search'),
     path('live-search/', views.live_search, name='live_search'),
+    path('special-offers/', views.special_offers, name='special_offers'),
 ]
 
 if settings.DEBUG:

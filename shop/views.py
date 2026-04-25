@@ -4,10 +4,8 @@ from .models import Category, Product
 from django.http import JsonResponse
 
 def home(request):
-    # گرفتن تمام دسته‌بندی‌ها و ارسال آن‌ها (برای حل مشکل محو شدن دسته‌بندی‌ها)
-    categories = Category.objects.all()
-    discounted_products = Product.objects.all() # یا هر شرطی که خودت داشتی
-    
+    categories = Category.objects.all() # این خط را حتماً داشته باش
+    discounted_products = Product.objects.all() 
     context = {
         'categories': categories,
         'discounted_products': discounted_products,
@@ -40,10 +38,17 @@ def search(request):
 def live_search(request):
     query = request.GET.get('q', '')
     if query:
-        # پیدا کردن ۵ محصول اول که نامشان شبیه کلمه تایپ شده است
-        products = Product.objects.filter(name__icontains=query)[:5]
-        # تبدیل اطلاعات به فرمتی که جاوااسکریپت بفهمد (JSON)
-        results = [{'name': p.name, 'url': f'/product/{p.slug}/'} for p in products]
+        products = Product.objects.filter(name__icontains=query)[:6]
+        results = [{
+            'name': p.name,
+            'url': f'/product/{p.slug}/',
+            'image': p.main_image.url if p.main_image else '/static/assets/images/no-image.png'
+        } for p in products]
     else:
         results = []
     return JsonResponse(results, safe=False)
+
+def special_offers(request):
+    # فیلتر کردن محصولاتی که فیلد تخفیف آن‌ها خالی نیست
+    products = Product.objects.exclude(discount__exact='')
+    return render(request, 'special_offers.html', {'products': products})

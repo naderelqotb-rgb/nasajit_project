@@ -1,0 +1,902 @@
+/* ==========================================================
+   فهرست استایل‌ها:
+   1. متغیرها و فونت‌ها
+   2. ریست و ساختار پایه
+   3. لی‌آوت اصلی و نویگیشن
+   4. گرید عمودی دسته‌ها و محصولات
+   5. اسلایدرهای افقی
+   6. جستجو (Search Overlay)
+   7. صفحه محصول (کاتالوگ)
+========================================================== */
+
+/* =========================================
+   1. متغیرها و فونت‌ها
+========================================= */
+:root {
+  --primary: #00a387;
+  --primary-dark: #008a72;
+  --primary-gradient: linear-gradient(135deg, #00a387 0%, #00c9a7 100%);
+  --bg: #f2f4f7;
+  --card-bg: #ffffff;
+  --text-dark: #1a1a2e;
+  --text-mid: #555;
+  --text-light: #888;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --radius: 16px;
+  --nav-height: 58px;
+  --header-height: 56px;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================
+   2. ریست و ساختار پایه
+========================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--bg);
+}
+
+body {
+  display: flex;
+  justify-content: center; /* قرار دادن دقیق مینی‌اپ در وسط بستر بزرگ */
+  align-items: flex-start;
+  min-height: 100vh;
+  margin: 0;
+  background-color: transparent !important;
+}
+
+html {
+  /* تنظیم رنگ بستر پیام‌رسان بله به یک رنگ متفاوت برای جداسازی مینی‌اپ */
+  background-color: var(--tg-theme-secondary-bg-color, #e5e7eb) !important;
+}
+
+/* =========================================
+   3. لی‌آوت اصلی و نویگیشن
+========================================= */
+.app-container {
+  width: 100% !important;
+  box-shadow: 0 0 25px rgba(0,0,0,0.15) !important;
+  max-width: 400px !important; /* قفل کردن عرض دقیق موبایل */
+  min-height: 100vh;
+  background-color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15); /* سایه برای جدا شدن از پس‌زمینه دسکتاپ */
+  margin: 0 auto !important; /* وسط‌چین کردن اجباری */
+  overflow-x: hidden;}
+
+/* هدر */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--header-height);
+  background: var(--primary-gradient);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  box-shadow: 0 2px 12px rgba(0,163,135,0.25);
+}
+
+.header-left, .header-right {
+  width: 44px;
+  display: flex;
+  align-items: center;
+}
+.header-left { justify-content: flex-start; }
+.header-right { justify-content: flex-end; }
+.header-logo { flex: 1; text-align: center; }
+
+.logo-text { font-weight: 700; font-size: 19px; letter-spacing: -0.3px; }
+
+.cart-icon, .back-button {
+  background: none; border: none; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%; transition: background 0.15s;
+}
+.cart-icon:active, .back-button:active { background: rgba(255,255,255,0.15); }
+.cart-icon svg, .back-button svg {
+  width: 22px; height: 22px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  min-width: 0; /* !!! این خط بسیار مهم است: جلوگیری از کشیده شدن توسط اسلایدرها !!! */
+  padding: 12px;
+  padding-bottom: 120px !important;
+  background-color: #f8f9fa;
+  overflow-x: hidden;
+}
+
+/* نوار ناوبری پایین */
+.bottom-nav {
+  position: fixed; 
+  bottom: 0; 
+  left: 50% !important; 
+  transform: translateX(-50%) !important;
+  width: 100% !important; 
+  max-width: 400px !important; /* قفل کردن عرض نوار پایین */
+  height: 65px; 
+  background: #ffffff;
+  border-top: 1px solid #e8e8e8; 
+  display: flex; 
+  align-items: center;
+  justify-content: space-around;
+  z-index: 9999;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  flex: 1;
+  height: 100%; /* گرفتن کل ارتفاع برای تراز شدن */
+  border: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* تراز کردن محتوا در مرکز */
+  gap: 2px;
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 10px;
+  transition: all 0.2s ease;
+}
+
+.nav-item svg {
+  width: 22px; height: 22px; stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.nav-item.active {
+  color: var(--primary);
+  font-weight: 700;
+}
+.nav-item.active svg {
+  stroke: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   4. گرید عمودی دسته‌ها و محصولات
+========================================= */
+.category-title {
+  text-align: center; margin: 8px 0 16px;
+  font-size: 14px; color: var(--text-mid); font-weight: 400;
+}
+
+.category-grid { display: flex; flex-direction: column; gap: 14px; padding: 0 4px; }
+
+.category-card {
+  background: var(--card-bg); 
+  border-radius: var(--radius); 
+  box-shadow: var(--shadow-sm); 
+  display: flex; 
+  min-height: 110px; 
+  cursor: pointer; 
+  transition: all 0.2s ease-out; /* حرکت نرم برای کل کارت */
+  overflow: hidden; 
+}
+
+.category-card:active .category-image {
+  transition: transform 0.4s ease;
+  transform: scale(1.15); /* تصویر 15 درصد بزرگتر می‌شود */
+}
+
+.category-image { 
+  background-color: #e8e8e8; 
+  width: 120px; 
+  background-size: cover; 
+  background-position: center; 
+  border-radius: 0 var(--radius) var(--radius) 0; 
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* حرکت نرم برای تصویر */
+}
+
+.category-card.card-clicked {
+  transform: scale(0.96); /* کل کارت کمی جمع می‌شود */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.category-card.card-clicked .category-image {
+  transform: scale(1.15); /* همزمان تصویر داخل کارت زوم می‌شود */
+}   
+
+.category-info { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 14px 16px; gap: 4px; }
+.category-label { font-size: 15.5px; font-weight: 700; color: var(--text-dark); }
+.category-desc { font-size: 12px; color: var(--text-light); }
+.category-arrow { display: flex; align-items: center; padding: 0 6px 0 14px; color: #ccc; }
+.category-arrow svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* گرید محصولات */
+.product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+.product-card {
+  background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-sm); display: flex; flex-direction: column; cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.product-card:active { transform: scale(0.97); box-shadow: var(--shadow-md); }
+
+.product-image {
+  background-color: #e8e8e8; height: 155px; background-size: cover;
+  background-position: center; flex-shrink: 0; width: 100%; position: relative;
+}
+
+.product-label { padding: 9px 10px; text-align: center; font-size: 13.5px; font-weight: 500; color: var(--text-dark); background: var(--card-bg); }
+
+/* استایل عکس ناموجود و خالی بودن */
+.product-image.no-image::after, .category-image.no-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #e0e0e0 0%, #cfcfcf 100%); display: flex; align-items: center; justify-content: center; }
+.product-image.no-image::before, .category-image.no-image::before { content: '🖼'; position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; opacity: 0.35; }
+.empty-state { text-align: center; padding: 48px 16px; color: var(--text-light); font-size: 14px; }
+
+/* =========================================
+   5. اسلایدرهای افقی
+========================================= */
+.horizontal-section { margin: 28px 0 20px 0; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 5px; }
+.section-title { font-size: 16px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 6px; margin: 0; }
+.section-see-all {
+  font-size: 12px; font-weight: 500; color: var(--primary);
+  background: rgba(0, 163, 135, 0.1); padding: 5px 12px;
+  border-radius: 14px; cursor: pointer; transition: opacity 0.2s;
+}
+.section-see-all:active { opacity: 0.6; }
+
+.horizontal-scroll {
+  display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; margin: 0 -12px; padding: 5px 18px 20px 18px;
+  scroll-padding: 0 18px; scrollbar-width: none;
+}
+.horizontal-scroll::-webkit-scrollbar { display: none; }
+
+.h-discount-card {
+  flex: 0 0 160px; scroll-snap-align: start; background: var(--card-bg);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; position: relative; cursor: pointer;
+}
+.h-discount-image { width: 100%; height: 160px; background-size: cover; background-position: center; background-color: #e8e8e8; border-bottom: 1px solid #f2f4f7; }
+.h-discount-info { padding: 10px 8px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; flex: 1; }
+.h-discount-name { font-size: 13.5px; font-weight: 600; color: var(--text-dark); width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.h-discount-badge {
+  position: absolute; top: 10px; left: 10px; background: #ef4444; color: #ffffff;
+  font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 8px;
+  z-index: 2; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.3s ease both; }
+
+@media (min-width: 481px) {
+    body {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-left: 1px solid var(--tg-theme-hint-color, #ccc);
+        border-right: 1px solid var(--tg-theme-hint-color, #ccc);
+    }
+}
+/* =========================================
+   6. جستجو (Search Overlay)
+========================================= */
+.search-overlay { 
+  position: fixed; 
+  top: 0; 
+  left: 50% !important; 
+  transform: translateX(-50%) translateY(100%) !important; 
+  width: 100% !important; 
+  max-width: 400px !important; /* قفل کردن عرض صفحه سرچ */
+  height: 100%; 
+  background: #f5f5f5; 
+  z-index: 10000; 
+  transition: transform 0.3s ease; 
+  display: flex; 
+  flex-direction: column; 
+}
+.search-overlay.open {transform: translateX(-50%) translateY(0) !important;}
+.search-header {
+  padding: 15px; display: flex; gap: 12px; align-items: center;
+  background: #fff; border-bottom: 1px solid #e8e8e8;
+}
+.search-input-wrapper { flex: 1; }
+.search-input {
+  width: 100%; padding: 12px 15px; background: #f0f0f0; border: 1px solid transparent;
+  border-radius: 12px; font-size: 14px; color: var(--text-dark); outline: none;
+}
+.search-input:focus { border-color: var(--primary); background: #fff; }
+.search-results { flex: 1; overflow-y: auto; padding: 15px; align-content: start; }
+
+/* =========================================
+   7. صفحه محصول (کاتالوگ)
+========================================= */
+.product-page-body { background: #f8f9fa; }
+.main-content.no-padding { padding: 0 !important; padding-bottom: 70px !important; }
+
+.app-header.transparent {
+    background: transparent !important; box-shadow: none !important;
+    position: absolute; top: 0; width: 100%; z-index: 20; padding: 10px 15px;
+}
+.back-button.circle {
+    background: rgba(255, 255, 255, 0.95); color: #1a1a2e; border-radius: 50%;
+    width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none; cursor: pointer;
+}
+
+.product-gallery-wrapper { position: relative; width: 100%; background: #e8e8e8; }
+.gallery-scroll-container { 
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+    scrollbar-width: none; scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch; user-select: none; -webkit-user-select: none;
+}
+.gallery-scroll-container::-webkit-scrollbar { display: none; }
+.gallery-scroll-container.grabbing * { pointer-events: none !important; }
+
+.gallery-slide { flex: 0 0 100%; scroll-snap-align: center; height: 380px; }
+.gallery-media { width: 100%; height: 100%; background-size: cover; background-position: center; object-fit: cover; background-color: #f8f9fa; background-repeat: no-repeat; }
+
+.gallery-counter {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  line-height: 1.5; /* بازگرداندن لاین‌هایت برای متن شمارنده */
+}
+
+.gallery-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0; background: #fff; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #e0e0e0; transition: all 0.3s ease; cursor: pointer; }
+.dot.active { background: #1e293b; width: 20px; border-radius: 4px; }
+
+.product-details-container {
+  padding: 20px 20px 100px; /* افزایش فاصله پایین به 100 پیکسل برای جلوگیری از هم‌پوشانی */
+  background: #fff;
+  line-height: 1.5;
+}
+
+.p-detail-title { font-size: 19px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; line-height: 1.5; }
+.details-divider { height: 1px; background: #f0f0f0; margin: 24px 0; }
+
+.p-action-btn {
+    display: flex; justify-content: center; align-items: center;
+    padding: 16px; border-radius: 16px; text-decoration: none;
+    font-weight: 700; font-size: 14.5px; transition: transform 0.1s;
+    width: 100%; box-sizing: border-box;
+}
+.p-action-btn:active { transform: scale(0.98); }
+.primary-navy { background: #1e293b; color: #fff; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.25); }
+.secondary-sky { background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; }
+
+.section-desc { font-size: 13px; color: #64748b; line-height: 1.7; margin-bottom: 16px; }
+.empty-state-text { font-size: 13px; color: #94a3b8; background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center; border: 1px dashed #cbd5e1; }
+
+.horizontal-scroll-works { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 5px; }
+.horizontal-scroll-works::-webkit-scrollbar { display: none; }
+.executed-work-item {
+    flex: 0 0 110px; height: 110px; border-radius: 16px;
+    background-size: cover; background-position: center; background-color: #e8e8e8;
+    scroll-snap-align: start; box-shadow: var(--shadow-sm); border: 1px solid #f0f0f0;
+}
+.action-buttons-group { display: flex; flex-direction: column; gap: 12px; }
+
+/* =========================================
+   اصلاح نهایی رفتار اسکرول (کاتالوگ)
+========================================= */
+
+.gallery-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    /* فعال سازی چسبندگی بومی مرورگر */
+    scroll-snap-type: x mandatory; 
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+}
+
+.gallery-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.gallery-slide {
+    min-width: 100%;
+    width: 100%;
+    /* قفل شدن دقیق در مرکز کادر */
+    scroll-snap-align: center; 
+    /* جلوگیری از پریدن از روی چند عکس هنگام درگ سریع */
+    scroll-snap-stop: always; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none; /* این خط عکس‌ها را غیرقابل کلیک می‌کند */
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+video.gallery-media {
+  pointer-events: auto;
+}
+
+/* جلوگیری از سلکت شدن متن و نمایش آیکون‌های مزاحم هنگام درگ */
+.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* اصلاح رفتار اسکرول در صفحه هوم (اسکرول آزاد) */
+#discounted-products-scroll {
+    scroll-snap-type: none !important; /* حذف مگنت در صفحه اصلی */
+    scroll-behavior: smooth;
+    cursor: grab;
+}
+
+/* اصلاح رفتار اسکرول در صفحه محصول (ورق زدن دقیق) */
+#galleryContainer {
+    scroll-snap-type: x mandatory !important;
+    cursor: grab;
+}
+
+/* جلوگیری از بهم ریختن چیدمان تصاویر در هوم */
+.h-discount-card {
+    scroll-snap-align: none !important; /* حذف چسبندگی کارت‌های تکی در هوم */
+}
+
+/* فعال بودن چسبندگی فقط برای اسلایدهای محصول */
+.gallery-slide {
+    scroll-snap-align: center !important;
+}
+
+/* حذف فاصله سفید بالای تصویر و تنظیم هدر */
+.product-header {
+    background: #fff !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.main-content.no-padding {
+    padding-top: 0 !important; /* حذف فاصله بالایی اصلی */
+    margin-top: 0 !important;
+}
+
+.product-gallery-wrapper {
+    margin-top: 0;
+    padding-top: 0;
+    line-height: 0; /* حذف فاصله احتمالی زیر عکس */
+}
+
+/* اصلاح دکمه بازگشت برای ماندن در کادر */
+.back-button-alt {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* استایل بخش دسته‌بندی درخواستی */
+.category-wrapper {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cat-label {
+    font-size: 12px;
+    color: #888;
+}
+
+.cat-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.cat-sub-value {
+    font-size: 14px;
+    color: #555;
+    background: #f5f5f5;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    width: fit-content;
+    margin-top: 4px;
+}
+  
+/* حذف فاصله سفید بالای تصویر و تنظیم هدر */
+.product-header {
+    background: #fff !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.main-content.no-padding {
+    padding-top: 0 !important; /* حذف فاصله بالایی اصلی */
+    margin-top: 0 !important;
+}
+
+.product-gallery-wrapper {
+    margin-top: 0;
+    padding-top: 0;
+    line-height: 0; /* حذف فاصله احتمالی زیر عکس */
+}
+
+/* اصلاح دکمه بازگشت برای ماندن در کادر */
+.back-button-alt {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* استایل بخش دسته‌بندی درخواستی */
+.category-wrapper {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cat-label {
+    font-size: 12px;
+    color: #888;
+}
+
+.cat-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.cat-sub-value {
+    font-size: 14px;
+    color: #555;
+    background: #f5f5f5;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    width: fit-content;
+    margin-top: 4px;
+}
+
+/* هدر اختصاصی صفحه محصول */
+.app-header.product-header {
+    background: #fff !important;
+    color: var(--text-dark) !important;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
+}
+
+.app-header.product-header .logo-text {
+    color: var(--text-dark) !important;
+    text-shadow: none !important;
+}
+
+/* دکمه بازگشت جدید */
+.back-button-alt {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.back-button-alt svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* شبکه دکمه‌های مشاوره */
+.action-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.p-btn-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 5px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.p-btn-new.website {
+    background: var(--primary-gradient);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 163, 135, 0.2);
+}
+
+.p-btn-new.support {
+    background: #f0fdfa;
+    color: var(--primary-dark);
+    border: 1px solid rgba(0, 163, 135, 0.2);
+}
+
+.p-btn-new:active {
+    transform: scale(0.96);
+}
+
+/* بهینه سازی گالری */
+.product-gallery-wrapper {
+    background: #fff;
+    padding-top: 10px;
+}
+
+/* جلوگیری از سلکت شدن متن و نمایش آیکون‌های مزاحم هنگام درگ */
+.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* اصلاح رفتار اسکرول در صفحه هوم (اسکرول آزاد) */
+#discounted-products-scroll {
+    scroll-snap-type: none !important; /* حذف مگنت در صفحه اصلی */
+    scroll-behavior: smooth;
+    cursor: grab;
+}
+
+/* اصلاح رفتار اسکرول در صفحه محصول (ورق زدن دقیق) */
+#galleryContainer {
+    scroll-snap-type: x mandatory !important;
+    cursor: grab;
+}
+
+/* جلوگیری از بهم ریختن چیدمان تصاویر در هوم */
+.h-discount-card {
+    scroll-snap-align: none !important; /* حذف چسبندگی کارت‌های تکی در هوم */
+}
+
+/* فعال بودن چسبندگی فقط برای اسلایدهای محصول */
+.gallery-slide {
+    scroll-snap-align: center !important;
+}
+
+.gallery-slide {
+    min-width: 100%;
+    width: 100%;
+    /* استفاده از center برای اطمینان از قرارگیری دقیق در وسط در هر رزولوشنی */
+    scroll-snap-align: center; 
+    scroll-snap-stop: always;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* جلوگیری از رفتارهای پیش‌فرض روی کارت‌های صفحه اصلی */
+.category-card, .h-discount-card {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* --- حذف قطعی فاصله سفید بالای گالری --- */
+.main-content.no-padding {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.product-gallery-wrapper {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    line-height: 0;
+    /* این خط هرگونه فاصله داخلی جا مانده را پاک می‌کند */
+    padding-top: 0 !important; 
+    /* این خط باعث می‌شود عکس دقیقاً به زیر هدر بچسبد */
+    margin-top: -1px; 
+    display: block;
+}
+
+.gallery-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    /* حذف فاصله‌های پیش‌فرض مرورگر */
+    margin: 0;
+    padding: 0;
+}
+
+.gallery-slide {
+    min-width: 100%;
+    width: 100%;
+    height: 380px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* فایل css/styles.css */
+.product-header .back-button {
+    color: #000000 !important; /* رنگ کاملاً مشکی */
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* اصلاح رنگ و استایل دکمه بازگشت در تمام صفحات */
+.back-button {
+    color: #000000 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.back-button svg {
+    width: 24px;
+    height: 24px;
+    /* اطمینان از جهت صحیح آیکون برای RTL */
+    transform: none; 
+}
+
+/* اگر در جای دیگری فلش برعکس است، از این کلاس استفاده کنید */
+.flip-rtl {
+    transform: scaleX(-1);
+}
+
+/* جلوگیری از رفتار درگ پیش‌فرض مرورگر روی لینک‌ها و کارت‌ها */
+.category-card, .product-card, .h-discount-card, .nav-item {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* روان‌سازی روند برگشت در مینی‌اپ */
+.app-container {
+    overflow-x: hidden; /* جلوگیری از اسکرول عرضی مزاحم هنگام جابجایی */
+}
+
+/* ۱. استایل کلی دکمه بازگشت (مکان و اندازه) */
+.back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.back-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ۲. رنگ سفید برای دکمه بازگشت در هدرهای استاندارد (مثل دسته‌بندی و جستجو) */
+.app-header .back-button {
+    color: #ffffff !important;
+}
+
+/* ۳. رنگ مشکی فقط برای هدر صفحه محصول (که پس‌زمینه سفید دارد) */
+.product-header .back-button {
+    color: #000000 !important;
+}
+
+/* استایل پاپ‌آپ تصاویر */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 11000; /* بالاتر از همه لایه‌ها */
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.9); /* پس‌زمینه سیاه نیمه‌شفاف */
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  cursor: zoom-out;
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
+}
+
+.modal.show {
+  display: flex;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  color: #fff;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+/* نشانگر قابل کلیک بودن تصاویر */
+.gallery-slide img, .executed-work-item {
+  cursor: zoom-in;
+}

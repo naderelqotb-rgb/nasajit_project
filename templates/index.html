@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>نساجیت - کاتالوگ دیجیتال</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-logo">
+        <span class="logo-text">نساجیت</span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      
+      <div class="horizontal-section" style="margin-top: 5px;">
+        <div class="section-header">
+          <h2 class="section-title">تخفیف ویژه</h2>
+        </div>
+        <div class="horizontal-scroll" id="discounted-products-scroll">
+          
+          {% for product in discounted_products %}
+          <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer;">
+            <div class="h-discount-badge">{{ product.discount }}</div>
+            
+            {% if product.main_image %}
+              <div class="h-discount-image" style="background-image: url('{{ product.main_image.url }}'); background-size: cover; background-position: center;"></div>
+            {% else %}
+              <div class="h-discount-image" style="background-color: #eee;"></div>
+            {% endif %}
+
+            <div class="h-discount-info">
+              <div class="h-discount-name">{{ product.name }}</div>
+              <div style="font-size: 13px; font-weight: bold; color: #00a387;">تخفیف ویژه</div>
+            </div>
+          </div>
+          {% empty %}
+          <p style="padding: 10px; font-size: 12px;">هنوز محصول تخفیف‌داری ثبت نشده است.</p>
+          {% endfor %}
+          
+        </div>
+      </div>
+
+      <p class="category-title" style="margin-top: 25px; border-top: 1px solid #e8e8e8; padding-top: 20px;">
+        دسته‌بندی‌ها
+      </p>
+      <section class="category-grid" id="home-category-grid">
+        
+        {% for category in categories %}
+        <div class="category-card">
+          <div class="category-info">
+            <div class="category-label">{{ category.title }}</div>
+            <div class="category-desc">{{ category.description }}</div>
+          </div>
+          
+          {% if category.image %}
+            <div class="category-image" style="background-image: url('{{ category.image.url }}'); background-size: cover; background-position: center;"></div>
+          {% else %}
+            <div class="category-image" style="background-color: #eee;"></div>
+          {% endif %}
+        </div>
+        {% empty %}
+        <p style="text-align: center; font-size: 12px;">هنوز دسته‌بندی ثبت نشده است.</p>
+        {% endfor %}
+        
+      </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>خانه</span>
+      </button>
+    </nav>
+  </div>
+</body>
+</html>

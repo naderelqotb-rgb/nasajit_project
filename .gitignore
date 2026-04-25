@@ -1,0 +1,13 @@
+# Python environment
+venv/
+__pycache__/
+*.pyc
+
+# Django Database (دیتابیس محلی نباید روی گیت برود)
+db.sqlite3
+
+# Uploaded Media (عکس‌هایی که در پنل ادمین آپلود کردید)
+media/
+
+# Environment variables
+.env

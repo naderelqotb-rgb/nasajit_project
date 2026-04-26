@@ -202,13 +202,14 @@ html {
   display: flex; 
   min-height: 110px; 
   cursor: pointer; 
-  transition: all 0.2s ease-out; /* حرکت نرم برای کل کارت */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden; 
+  transform: translateY(0);
 }
 
 .category-card:active .category-image {
-  transition: transform 0.4s ease;
-  transform: scale(1.15); /* تصویر 15 درصد بزرگتر می‌شود */
+  transform: scale(1.15) rotate(3deg); /* چرخش و زوم ملایم برای القای حس کلیک */
+  transition: transform 0.2s ease;
 }
 
 .category-image { 
@@ -217,7 +218,21 @@ html {
   background-size: cover; 
   background-position: center; 
   border-radius: 0 var(--radius) var(--radius) 0; 
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* حرکت نرم برای تصویر */
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.08);
+}
+
+.category-card:active {
+  transform: translateY(2px) scale(0.96);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
 }
 
 .category-card.card-clicked {

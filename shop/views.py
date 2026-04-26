@@ -1,18 +1,17 @@
-# کلمه get_object_or_404 را به خط اول اضافه کردیم
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
 from django.http import JsonResponse
 
 def home(request):
-    categories = Category.objects.all() # این خط را حتماً داشته باش
-    discounted_products = Product.objects.all() 
+    categories = Category.objects.all()
+    # تغییر مهم: فقط محصولاتی که فیلد تخفیف آن‌ها خالی نیست!
+    discounted_products = Product.objects.exclude(discount__exact='').exclude(discount__isnull=True) 
     context = {
         'categories': categories,
         'discounted_products': discounted_products,
     }
     return render(request, 'index.html', context)
 
-# این تابع جدید برای صفحه اختصاصی هر محصول است
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     return render(request, 'product.html', {'product': product})
@@ -20,11 +19,6 @@ def product_detail(request, slug):
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = category.products.all() # تمام محصولات این دسته‌بندی
-    return render(request, 'category_detail.html', {'category': category, 'products': products})
-
-def category_detail(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    products = category.products.all()
     return render(request, 'category_detail.html', {'category': category, 'products': products})
 
 def search(request):

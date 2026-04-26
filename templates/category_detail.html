@@ -24,8 +24,12 @@
       <div style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
         
         {% for product in products %}
-        <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer; width: 100%; margin: 0;">
+        <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer; width: 100%; margin: 0; position: relative;">
           
+          {% if product.discount %}
+            <span class="h-discount-badge">{{ product.discount }}</span>
+          {% endif %}
+
           {% if product.main_image %}
             <div class="h-discount-image" style="background-image: url('{{ product.main_image.url }}'); background-size: cover; background-position: center; height: 130px;"></div>
           {% else %}
@@ -59,6 +63,8 @@
             <span>خانه</span>
           </button>
       </nav>
+      
+      <script src="{% static 'js/app.js' %}"></script>
   </div>
 </body>
 </html>

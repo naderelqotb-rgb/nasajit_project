@@ -38,7 +38,12 @@
       </div>
 
       <div class="product-details-container">
-        <h1 class="p-detail-title">{{ product.name }}</h1>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h1 class="p-detail-title" style="margin-bottom: 0;">{{ product.name }}</h1>
+            {% if product.discount %}
+                <span class="h-discount-badge" style="position: static; box-shadow: none; font-size: 13px; padding: 4px 10px;">{{ product.discount }}</span>
+            {% endif %}
+        </div>
         
         <div class="category-wrapper">
             <span class="cat-label">دسته‌بندی:</span>

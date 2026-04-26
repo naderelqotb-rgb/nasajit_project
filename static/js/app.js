@@ -343,7 +343,31 @@ if (searchInput) {
 }
 
 // ۱۰. اجرای صحیح توابع (بدون تکرار)
+// ۱۰. اجرای صحیح توابع هنگام لود شدن صفحه
 document.addEventListener('DOMContentLoaded', () => {
+  
+  // الف) فعال‌سازی اسکرول با درگ موس برای محصولات تخفیف‌دار در صفحه اصلی
+  const discountScroll = document.getElementById('discounted-products-scroll');
+  if (discountScroll) {
+      enableMouseDrag(discountScroll);
+  }
+
+  // ب) فارسی کردن اعداد تخفیف و اضافه کردن علامت درصد (٪)
+  const discountBadges = document.querySelectorAll('.h-discount-badge');
+  discountBadges.forEach(badge => {
+      let text = badge.innerText.trim();
+      // استفاده از تابع موجود در بالا برای تبدیل اعداد انگلیسی به فارسی
+      text = toPersianNum(text);
+      // بررسی وجود علامت درصد و اضافه کردن آن در صورت نیاز
+      if (!text.includes('٪') && !text.includes('%')) {
+          text += '٪';
+      } else if (text.includes('%')) {
+          text = text.replace('%', '٪');
+      }
+      badge.innerText = text;
+  });
+
+  // ج) رندرهای کلاینت‌ساید (برای بخش‌های غیر جنگویی در صورت وجود)
   if (document.getElementById('home-category-grid')) {
       renderHomePage();
   } else if (document.getElementById('product-grid')) {

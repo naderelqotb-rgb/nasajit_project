@@ -1,32 +1,37 @@
 from django.db import models
 
 class Category(models.Model):
-    title = models.CharField(max_length=100, verbose_name="عنوان دسته‌بندی")
-    slug = models.SlugField(unique=True, verbose_name="شناسه (انگلیسی)")
-    description = models.TextField(blank=True, null=True, verbose_name="توضیحات")
-    # قابلیت آپلود تصویر دسته‌بندی
-    image = models.ImageField(upload_to='categories/', verbose_name="تصویر دسته‌بندی", blank=True, null=True)
-    
-    class Meta:
-        verbose_name = "دسته‌بندی"
-        verbose_name_plural = "دسته‌بندی‌ها"
+    title = models.CharField(max_length=100, verbose_name="عنوان دسته")
+    slug = models.SlugField(unique=True)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title
 
-class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, verbose_name="دسته‌بندی")
-    name = models.CharField(max_length=200, verbose_name="نام محصول")
-    slug = models.SlugField(unique=True, verbose_name="شناسه (انگلیسی)")
-    # تصویر اصلی محصول با قابلیت آپلود
-    main_image = models.ImageField(upload_to='products/main/', verbose_name="تصویر اصلی", blank=True, null=True)
-    # فقط درصد تخفیف باقی مانده است
-    discount = models.CharField(max_length=10, blank=True, null=True, verbose_name="درصد تخفیف (مثلاً ۲۸٪)")
-    created_at = models.DateTimeField(auto_now_add=True)
+# --- مدل جدید برای پشتیبان‌ها ---
+class SupportContact(models.Model):
+    name = models.CharField(max_length=100, verbose_name="نام پشتیبان")
+    telegram_id = models.CharField(max_length=100, verbose_name="آی‌دی بله یا شماره تماس", help_text="مثلاً: admin_support")
 
     class Meta:
-        verbose_name = "محصول"
-        verbose_name_plural = "محصولات"
+        verbose_name = "پشتیبان"
+        verbose_name_plural = "پشتیبان‌ها"
+
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, verbose_name="نام محصول")
+    slug = models.SlugField(unique=True)
+    main_image = models.ImageField(upload_to='products/')
+    discount = models.CharField(max_length=50, blank=True, null=True, verbose_name="تخفیف (مثلاً ۱۰٪)")
+    
+    # --- فیلدهای درخواستی جدید ---
+    web_url = models.URLField(blank=True, null=True, verbose_name="لینک محصول در وب‌اپ (سایت)")
+    # مشکل on_submit در این خط برطرف و به on_delete تبدیل شد
+    support_contact = models.ForeignKey(SupportContact, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="پشتیبان اختصاصی")
 
     def __str__(self):
         return self.name

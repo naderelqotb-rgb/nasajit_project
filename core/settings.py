@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-729w=&%nc1z1z085_j@9dglzz@x+c27m=@&8h+40ayo)efsd6h"
+import os # این خط را بالای فایل اضافه کن
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-729w=&%nc1z1z085_j@9dglzz@x+c27m=@&8h+40ayo)efsd6h')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# لیارا به صورت خودکار این مقدار را روی سرور False می‌کند
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+# اجازه دادن به دامنه لیارا
+ALLOWED_HOSTS = ['*'] # برای راحتی کار فعلا ستاره می‌گذاریم تا روی هر دامنه‌ای کار کند
 
 
 # Application definition
@@ -42,6 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -119,6 +126,9 @@ STATIC_URL = "static/"
 
 # معرفی مسیر فایل‌های ثابت (CSS, JS)
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # معرفی مسیر فایل‌های آپلودی (عکس‌های پنل ادمین)
 MEDIA_URL = '/media/'

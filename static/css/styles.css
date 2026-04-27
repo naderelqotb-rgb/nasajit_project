@@ -428,339 +428,79 @@ html {
    اصلاح نهایی رفتار اسکرول (کاتالوگ)
 ========================================= */
 
+/* =========================================
+   اصلاح نهایی و یکپارچه رفتار اسکرول و کاتالوگ
+========================================= */
 .gallery-scroll-container {
     display: flex;
     overflow-x: auto;
-    /* فعال سازی چسبندگی بومی مرورگر */
     scroll-snap-type: x mandatory; 
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
     cursor: grab;
+    margin: 0;
+    padding: 0;
 }
 
-.gallery-scroll-container::-webkit-scrollbar {
-    display: none;
-}
+.gallery-scroll-container::-webkit-scrollbar { display: none; }
+.gallery-scroll-container.grabbing * { pointer-events: none !important; }
 
 .gallery-slide {
     min-width: 100%;
     width: 100%;
-    /* قفل شدن دقیق در مرکز کادر */
-    scroll-snap-align: center; 
-    /* جلوگیری از پریدن از روی چند عکس هنگام درگ سریع */
+    height: 380px;
+    scroll-snap-align: center !important; 
     scroll-snap-stop: always; 
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
 .gallery-media {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none; /* این خط عکس‌ها را غیرقابل کلیک می‌کند */
-  -webkit-user-drag: none;
-  user-select: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
 }
+video.gallery-media { pointer-events: auto; }
 
-video.gallery-media {
-  pointer-events: auto;
-}
-
-/* جلوگیری از سلکت شدن متن و نمایش آیکون‌های مزاحم هنگام درگ */
-.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card {
+/* جلوگیری از سلکت شدن متن در درگ */
+.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card, .nav-item, .product-card {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
+    -webkit-user-drag: none;
 }
 
-/* اصلاح رفتار اسکرول در صفحه هوم (اسکرول آزاد) */
-#discounted-products-scroll {
-    scroll-snap-type: none !important; /* حذف مگنت در صفحه اصلی */
-    scroll-behavior: smooth;
-    cursor: grab;
-}
+/* اصلاح چسبندگی‌ها */
+#discounted-products-scroll { scroll-snap-type: none !important; cursor: grab; }
+#galleryContainer { scroll-snap-type: x mandatory !important; cursor: grab; }
+.h-discount-card { scroll-snap-align: none !important; }
 
-/* اصلاح رفتار اسکرول در صفحه محصول (ورق زدن دقیق) */
-#galleryContainer {
-    scroll-snap-type: x mandatory !important;
-    cursor: grab;
-}
-
-/* جلوگیری از بهم ریختن چیدمان تصاویر در هوم */
-.h-discount-card {
-    scroll-snap-align: none !important; /* حذف چسبندگی کارت‌های تکی در هوم */
-}
-
-/* فعال بودن چسبندگی فقط برای اسلایدهای محصول */
-.gallery-slide {
-    scroll-snap-align: center !important;
-}
-
-/* حذف فاصله سفید بالای تصویر و تنظیم هدر */
-.product-header {
-    background: #fff !important;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.main-content.no-padding {
-    padding-top: 0 !important; /* حذف فاصله بالایی اصلی */
-    margin-top: 0 !important;
-}
-
-.product-gallery-wrapper {
-    margin-top: 0;
-    padding-top: 0;
-    line-height: 0; /* حذف فاصله احتمالی زیر عکس */
-}
-
-/* اصلاح دکمه بازگشت برای ماندن در کادر */
-.back-button-alt {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    color: var(--primary);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 0;
-    cursor: pointer;
-}
-
-/* استایل بخش دسته‌بندی درخواستی */
-.category-wrapper {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.cat-label {
-    font-size: 12px;
-    color: #888;
-}
-
-.cat-value {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--primary-dark);
-}
-
-.cat-sub-value {
-    font-size: 14px;
-    color: #555;
-    background: #f5f5f5;
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    width: fit-content;
-    margin-top: 4px;
-}
-  
-/* حذف فاصله سفید بالای تصویر و تنظیم هدر */
-.product-header {
-    background: #fff !important;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.main-content.no-padding {
-    padding-top: 0 !important; /* حذف فاصله بالایی اصلی */
-    margin-top: 0 !important;
-}
-
-.product-gallery-wrapper {
-    margin-top: 0;
-    padding-top: 0;
-    line-height: 0; /* حذف فاصله احتمالی زیر عکس */
-}
-
-/* اصلاح دکمه بازگشت برای ماندن در کادر */
-.back-button-alt {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    color: var(--primary);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 0;
-    cursor: pointer;
-}
-
-/* استایل بخش دسته‌بندی درخواستی */
-.category-wrapper {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.cat-label {
-    font-size: 12px;
-    color: #888;
-}
-
-.cat-value {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--primary-dark);
-}
-
-.cat-sub-value {
-    font-size: 14px;
-    color: #555;
-    background: #f5f5f5;
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    width: fit-content;
-    margin-top: 4px;
-}
-
-/* هدر اختصاصی صفحه محصول */
+/* هدر اختصاصی و فاصله‌های صفحه محصول */
 .app-header.product-header {
     background: #fff !important;
     color: var(--text-dark) !important;
     border-bottom: 1px solid #eee;
     box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
-}
-
-.app-header.product-header .logo-text {
-    color: var(--text-dark) !important;
-    text-shadow: none !important;
-}
-
-/* دکمه بازگشت جدید */
-.back-button-alt {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 60px;
     display: flex;
     align-items: center;
-    gap: 4px;
-    background: none;
-    border: none;
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
+    padding: 0 15px;
 }
+.app-header.product-header .logo-text { text-shadow: none !important; }
 
-.back-button-alt svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* شبکه دکمه‌های مشاوره */
-.action-buttons-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.p-btn-new {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 5px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-size: 12.5px;
-    font-weight: 700;
-    transition: all 0.2s ease;
-    text-align: center;
-}
-
-.p-btn-new.website {
-    background: var(--primary-gradient);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 163, 135, 0.2);
-}
-
-.p-btn-new.support {
-    background: #f0fdfa;
-    color: var(--primary-dark);
-    border: 1px solid rgba(0, 163, 135, 0.2);
-}
-
-.p-btn-new:active {
-    transform: scale(0.96);
-}
-
-/* بهینه سازی گالری */
-.product-gallery-wrapper {
-    background: #fff;
-    padding-top: 10px;
-}
-
-/* جلوگیری از سلکت شدن متن و نمایش آیکون‌های مزاحم هنگام درگ */
-.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-}
-
-/* اصلاح رفتار اسکرول در صفحه هوم (اسکرول آزاد) */
-#discounted-products-scroll {
-    scroll-snap-type: none !important; /* حذف مگنت در صفحه اصلی */
-    scroll-behavior: smooth;
-    cursor: grab;
-}
-
-/* اصلاح رفتار اسکرول در صفحه محصول (ورق زدن دقیق) */
-#galleryContainer {
-    scroll-snap-type: x mandatory !important;
-    cursor: grab;
-}
-
-/* جلوگیری از بهم ریختن چیدمان تصاویر در هوم */
-.h-discount-card {
-    scroll-snap-align: none !important; /* حذف چسبندگی کارت‌های تکی در هوم */
-}
-
-/* فعال بودن چسبندگی فقط برای اسلایدهای محصول */
-.gallery-slide {
-    scroll-snap-align: center !important;
-}
-
-.gallery-slide {
-    min-width: 100%;
-    width: 100%;
-    /* استفاده از center برای اطمینان از قرارگیری دقیق در وسط در هر رزولوشنی */
-    scroll-snap-align: center; 
-    scroll-snap-stop: always;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* جلوگیری از رفتارهای پیش‌فرض روی کارت‌های صفحه اصلی */
-.category-card, .h-discount-card {
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-/* --- حذف قطعی فاصله سفید بالای گالری --- */
 .main-content.no-padding {
     padding-top: 0 !important;
     margin-top: 0 !important;
@@ -771,204 +511,63 @@ video.gallery-media {
     width: 100%;
     background: #fff;
     line-height: 0;
-    /* این خط هرگونه فاصله داخلی جا مانده را پاک می‌کند */
     padding-top: 0 !important; 
-    /* این خط باعث می‌شود عکس دقیقاً به زیر هدر بچسبد */
     margin-top: -1px; 
     display: block;
 }
 
-.gallery-scroll-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    cursor: grab;
-    /* حذف فاصله‌های پیش‌فرض مرورگر */
-    margin: 0;
-    padding: 0;
-}
-
-.gallery-slide {
-    min-width: 100%;
-    width: 100%;
-    height: 380px;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-/* فایل css/styles.css */
-.product-header .back-button {
-    color: #000000 !important; /* رنگ کاملاً مشکی */
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* اصلاح رنگ و استایل دکمه بازگشت در تمام صفحات */
+/* استایل‌های دکمه بازگشت یکپارچه */
 .back-button {
-    color: #000000 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-}
-
-.back-button svg {
-    width: 24px;
-    height: 24px;
-    /* اطمینان از جهت صحیح آیکون برای RTL */
-    transform: none; 
-}
-
-/* اگر در جای دیگری فلش برعکس است، از این کلاس استفاده کنید */
-.flip-rtl {
-    transform: scaleX(-1);
-}
-
-/* جلوگیری از رفتار درگ پیش‌فرض مرورگر روی لینک‌ها و کارت‌ها */
-.category-card, .product-card, .h-discount-card, .nav-item {
-    -webkit-user-drag: none;
-    user-select: none;
-}
-
-/* روان‌سازی روند برگشت در مینی‌اپ */
-.app-container {
-    overflow-x: hidden; /* جلوگیری از اسکرول عرضی مزاحم هنگام جابجایی */
-}
-
-/* ۱. استایل کلی دکمه بازگشت (مکان و اندازه) */
-.back-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.back-button svg {
-    width: 24px;
-    height: 24px;
-}
-
-/* ۲. رنگ سفید برای دکمه بازگشت در هدرهای استاندارد (مثل دسته‌بندی و جستجو) */
-.app-header .back-button {
     color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
+.product-header .back-button { color: #000000 !important; }
+.back-button svg { width: 24px; height: 24px; transform: none; }
 
-/* ۳. رنگ مشکی فقط برای هدر صفحه محصول (که پس‌زمینه سفید دارد) */
-.product-header .back-button {
-    color: #000000 !important;
+.back-button-alt {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
 }
+.back-button-alt svg { width: 20px; height: 20px; }
 
-/* استایل پاپ‌آپ تصاویر */
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 11000; /* بالاتر از همه لایه‌ها */
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.9); /* پس‌زمینه سیاه نیمه‌شفاف */
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(5px);
-  cursor: zoom-out;
-}
+/* دسته‌بندی و دکمه‌های صفحه محصول */
+.category-wrapper { margin-top: 8px; display: flex; flex-direction: column; gap: 2px; }
+.cat-label { font-size: 12px; color: #888; }
+.cat-value { font-size: 16px; font-weight: bold; color: var(--primary-dark); }
+.cat-sub-value { font-size: 14px; color: #555; background: #f5f5f5; display: inline-block; padding: 2px 8px; border-radius: 4px; width: fit-content; margin-top: 4px; }
 
-.modal-content {
-  max-width: 90%;
-  max-height: 80%;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  transform: scale(0.8);
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+.action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.p-btn-new { display: flex; align-items: center; justify-content: center; padding: 14px 5px; border-radius: 12px; text-decoration: none; font-size: 12.5px; font-weight: 700; transition: all 0.2s ease; text-align: center; }
+.p-btn-new.website { background: var(--primary-gradient); color: #fff; box-shadow: 0 4px 12px rgba(0, 163, 135, 0.2); }
+.p-btn-new.support { background: #f0fdfa; color: var(--primary-dark); border: 1px solid rgba(0, 163, 135, 0.2); }
+.p-btn-new:active { transform: scale(0.96); }
 
-.modal.show .modal-content {
-  transform: scale(1);
-}
+/* پاپ‌آپ تصاویر */
+.modal { display: none; position: fixed; z-index: 11000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); cursor: zoom-out; }
+.modal-content { max-width: 90%; max-height: 80%; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.5); transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.modal.show .modal-content { transform: scale(1); }
+.modal.show { display: flex; }
+.close-modal { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 35px; font-weight: bold; }
+.gallery-slide img, .executed-work-item { cursor: zoom-in; }
 
-.modal.show {
-  display: flex;
-}
-
-.close-modal {
-  position: absolute;
-  top: 20px;
-  right: 25px;
-  color: #fff;
-  font-size: 35px;
-  font-weight: bold;
-}
-
-/* نشانگر قابل کلیک بودن تصاویر */
-.gallery-slide img, .executed-work-item {
-  cursor: zoom-in;
-}
-
-/* =========================================
-   8. استایل‌های جستجوی زنده (Live Search)
-========================================= */
-.suggestions-box {
-  position: absolute;
-  top: 55px;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  z-index: 1000;
-  display: none;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  max-height: 450px;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.suggestions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* شبیه‌سازی کارت دسته‌بندی برای نتایج جستجو */
-.search-suggestion-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  display: flex;
-  min-height: 110px;
-  cursor: pointer;
-  overflow: hidden;
-  border: 1px solid #f0f0f0;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.search-suggestion-card:active {
-   transform: scale(0.97); 
-   box-shadow: 0 4px 16px rgba(0,0,0,0.10); 
-}
-
-.search-suggestion-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 12px 15px;
-}
-
-.search-suggestion-img {
-  width: 120px;
-  background-size: cover;
-  background-position: center;
-  background-color: #f8f8f8;
-}
+/* جستجوی زنده */
+.suggestions-box { position: absolute; top: 55px; left: 0; width: 100%; background: #fff; border-radius: 12px; z-index: 1000; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 450px; overflow-y: auto; padding: 10px; }
+.suggestions-list { display: flex; flex-direction: column; gap: 12px; }
+.search-suggestion-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); display: flex; min-height: 110px; cursor: pointer; overflow: hidden; border: 1px solid #f0f0f0; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.search-suggestion-card:active { transform: scale(0.97); box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+.search-suggestion-info { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 12px 15px; }
+.search-suggestion-img { width: 120px; background-size: cover; background-position: center; background-color: #f8f8f8; }

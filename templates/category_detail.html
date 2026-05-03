@@ -6,14 +6,23 @@
   <title>نساجیت - پارچه‌های {{ category.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <!-- اضافه شدن اسکریپت تلگرام به صورت async برای جلوگیری از کندی -->
+  <script src="{% static 'js/telegram-web-app.js' %}  " async></script>
 </head>
 <body>
   <div class="app-container">
-    <header class="app-header">
-      <button class="back-button" onclick="history.back()">
-        <svg viewBox="0 0 24 24" width="24" height="24"><polyline points="15 18 9 12 15 6"/></svg>
+    
+    <!-- هدر کاملاً وسط‌چین شده -->
+    <header class="app-header" style="position: relative; display: flex; align-items: center; padding: 15px; width: 100%; box-sizing: border-box;">
+      <button class="back-button" onclick="history.back()" style="background: transparent; border: none; cursor: pointer; padding: 5px; display: flex; z-index: 10;">
+        <!-- رنگ آیکون سفید تنظیم شده چون پس‌زمینه هدر اصلی (در styles.css) سبز رنگ است -->
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
       </button>
-      <div class="header-logo"><span class="logo-text">دسته: {{ category.title }}</span></div>
+      <div class="header-logo" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; z-index: 1; pointer-events: none; margin: 0;">
+        <span class="logo-text" style="color: #fff; font-size: 18px; font-weight: bold;">دسته: {{ category.title }}</span>
+      </div>
     </header>
 
     <main class="main-content">
@@ -27,7 +36,8 @@
         <div class="h-discount-card" onclick="location.href='{% url 'product_detail' product.slug %}'" style="cursor: pointer; width: 100%; margin: 0; position: relative;">
           
           {% if product.discount %}
-            <span class="h-discount-badge">{{ product.discount }}</span>
+            <!-- اضافه شدن کلاس persian-number برای فارسی‌سازی عدد تخفیف -->
+            <span class="h-discount-badge persian-number">{{ product.discount }}</span>
           {% endif %}
 
           {% if product.main_image %}
@@ -47,6 +57,26 @@
       </div>
     </main>
 
+    <!-- ========================================== -->
+    <!-- بلوک پنجره جستجو -->
+    <!-- ========================================== -->
+    <div id="searchOverlay" class="search-overlay">
+      <div class="search-header">
+        <button class="back-button" onclick="toggleSearch(false)">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="search-input-wrapper" style="position: relative; width: 100%;">
+          <form action="{% url 'search' %}" method="GET" style="width: 100%;">
+            <input type="text" name="q" id="searchInput" class="search-input" placeholder="جستجوی پارچه..." autocomplete="off" oninput="liveSearch(this.value)">
+          </form>
+          
+          <div id="suggestions-box" class="suggestions-box">
+            <div class="suggestions-list" id="suggestions-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <nav class="bottom-nav">
           <button class="nav-item" onclick="location.href='{% url 'special_offers' %}'">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
@@ -64,7 +94,45 @@
           </button>
       </nav>
       
-      <script src="{% static 'js/app.js' %}"></script>
   </div>
+
+  <script src="{% static 'js/app.js' %}"></script>
+  <script>
+    // تابع جستجوی زنده
+    function liveSearch(query) {
+        const box = document.getElementById('suggestions-box');
+        const container = document.getElementById('suggestions-container');
+        if (!box || !container) return;
+        
+        if (query.length < 1) { 
+            box.style.display = 'none'; 
+            return; 
+        }
+
+        fetch('/live-search/?q=' + query)
+        .then(response => response.json())
+        .then(data => {
+            container.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(item => {
+                    container.innerHTML += `
+                      <div class="search-suggestion-card" onclick="location.href='${item.url}'">
+                        <div class="search-suggestion-info">
+                          <div style="font-weight: bold; font-size: 15px; color: #1a1a2e;">${item.name}</div>
+                          <div style="font-size: 12px; color: #888; margin-top: 4px;">مشاهده جزئیات</div>
+                        </div>
+                        <div class="search-suggestion-img" style="background-image: url('${item.image}')"></div>
+                      </div>`;
+                });
+                box.style.display = 'block';
+            } else { 
+                box.style.display = 'none'; 
+            }
+        })
+        .catch(error => {
+            console.error('خطا در جستجو:', error);
+        });
+    }
+  </script>
 </body>
 </html>

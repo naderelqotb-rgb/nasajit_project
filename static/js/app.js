@@ -1,35 +1,48 @@
 // ==========================================
-// js/app.js - نسخه کاملاً بهینه‌شده برای جنگو
+// js/app.js - نسخه نهایی، یکپارچه و بهینه‌شده
 // ==========================================
 
-// ۱. سیستم قفل و لودینگ تلگرام/بله
-const tg = window.Telegram?.WebApp;
-if (tg && tg.initData) {
-    if (typeof tg.expand === 'function') {
-        tg.expand();
-        tg.ready();
-    }
+// ۱. سیستم قفل و لودینگ تلگرام (با بررسی ایمن)
+try {
+  const tg = window.Telegram?.WebApp;
+  if (tg && tg.initData) {
+      if (typeof tg.expand === 'function') {
+          tg.expand();
+      }
+      if (typeof tg.ready === 'function') {
+          tg.ready();
+      }
+  }
+} catch (e) {
+  console.warn("Telegram WebApp is not available or not running in Telegram environment.");
 }
 
-// ۲. توابع کمکی
-function toPersianNum(num) {
+// ۲. توابع کمکی (عمومی کردن تابع برای استفاده در صورت نیاز)
+window.toPersianNum = function(num) {
+  if (num === null || num === undefined) return '';
   const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
   return num.toString().replace(/\d/g, x => persianDigits[x]);
-}
-
-// ۳. مدیریت پاپ‌آپ تصاویر (زوم کاتالوگ)
-window.openImageModal = function(src) {
-    const modal = document.getElementById("image-modal");
-    const modalImg = document.getElementById("modal-img");
-    if (modal && modalImg) {
-        modalImg.src = src;
-        modal.classList.add("show");
-    }
 };
 
-window.closeImageModal = function() {
-    const modal = document.getElementById("image-modal");
-    if (modal) modal.classList.remove("show");
+// ۳. مدیریت پاپ‌آپ تصاویر (زوم کاتالوگ)
+window.openModal = function(src) {
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImage");
+  if (modal && modalImg) {
+      modal.style.display = "flex";
+      modalImg.src = src;
+      // تاخیر کوتاه برای اجرای انیمیشن CSS
+      setTimeout(() => modal.classList.add("show"), 10);
+  }
+};
+
+window.closeModal = function() {
+  const modal = document.getElementById("imageModal");
+  if (modal) {
+      modal.classList.remove("show");
+      // صبر کردن برای پایان انیمیشن قبل از مخفی کردن کامل
+      setTimeout(() => modal.style.display = "none", 300);
+  }
 };
 
 // ۴. درگ کردن با موس برای تمام اسلایدرها
@@ -78,56 +91,66 @@ window.enableMouseDrag = function(container) {
     }
   });
 
+  // جلوگیری از کلیک تصادفی هنگام درگ کردن
   container.addEventListener('click', (e) => {
     if (isDragging) {
       e.preventDefault();
       e.stopPropagation();
     }
   }, true);
-}
+};
 
 // ۵. مدیریت جستجو (منوی جستجو)
 window.toggleSearch = function(show) {
-  const overlay = document.getElementById('search-overlay');
+  const overlay = document.getElementById('searchOverlay');
   if (!overlay) return;
+  
   if (show) {
     overlay.classList.add('open');
-    setTimeout(() => {
-      const input = document.getElementById('search-input');
-      if(input) input.focus();
-    }, 300);
+    // فوکوس باید بلافاصله و بدون تاخیر باشد تا کیبورد در موبایل باز شود
+    const input = document.getElementById('searchInput');
+    if(input) input.focus();
   } else {
     overlay.classList.remove('open');
   }
-}
+};
 
-// ۶. اجرای کدهای وابسته به ظاهر هنگام لود شدن صفحه
+// ۶. اجرای کدهای وابسته به ظاهر هنگام لود شدن کامل صفحه
 document.addEventListener('DOMContentLoaded', () => {
   
-  // فعال‌سازی اسکرول با درگ موس برای تمام بخش‌های افقی سایت
+  // الف) فعال‌سازی اسکرول با درگ موس برای تمام بخش‌های افقی سایت
   const scrollContainers = document.querySelectorAll('.horizontal-scroll, .gallery-scroll-container, .horizontal-scroll-works');
-  scrollContainers.forEach(container => enableMouseDrag(container));
+  scrollContainers.forEach(container => window.enableMouseDrag(container));
 
-  // فارسی کردن اعداد تخفیف
-  const discountBadges = document.querySelectorAll('.h-discount-badge');
-  discountBadges.forEach(badge => {
-      let text = badge.innerText.trim();
-      text = toPersianNum(text);
-      if (!text.includes('٪') && !text.includes('%')) text += '٪';
-      else if (text.includes('%')) text = text.replace('%', '٪');
-      badge.innerText = text;
+  // ب) فارسی کردن تمام اعداد (تخفیف‌ها، قیمت‌ها و کلاس‌های اختصاصی)
+  const numberElements = document.querySelectorAll('.h-discount-badge, .persian-number');
+  numberElements.forEach(el => {
+      let text = el.innerText.trim();
+      text = window.toPersianNum(text);
+      
+      // اگر المان مربوط به مدج تخفیف است و درصد ندارد، به آن اضافه کن
+      if (el.classList.contains('h-discount-badge')) {
+          if (!text.includes('٪') && !text.includes('%')) text += '٪';
+          else if (text.includes('%')) text = text.replace('%', '٪');
+      }
+      
+      el.innerText = text;
   });
   
-  // مدیریت شماره‌های اسلایدر در صفحه مشخصات محصول
-  const container = document.getElementById("galleryContainer");
+  // ج) مدیریت شماره‌های اسلایدر در صفحه مشخصات محصول
+  const galleryContainer = document.getElementById("galleryContainer");
   const dotsContainer = document.getElementById("galleryDots");
   const currentImgIndex = document.getElementById("currentImgIndex");
   
-  if (container) {
-      container.addEventListener('scroll', () => {
-          const slideWidth = container.clientWidth;
-          const index = Math.round(Math.abs(container.scrollLeft) / slideWidth);
-          if (currentImgIndex) currentImgIndex.textContent = toPersianNum(index + 1);
+  if (galleryContainer) {
+      galleryContainer.addEventListener('scroll', () => {
+          const slideWidth = galleryContainer.clientWidth;
+          if (slideWidth === 0) return; // جلوگیری از خطای تقسیم بر صفر
+          
+          const index = Math.round(Math.abs(galleryContainer.scrollLeft) / slideWidth);
+          
+          if (currentImgIndex) currentImgIndex.textContent = window.toPersianNum(index + 1);
+          
           if (dotsContainer) {
               const dots = dotsContainer.querySelectorAll('.dot');
               dots.forEach((d, i) => d.classList.toggle('active', i === index));

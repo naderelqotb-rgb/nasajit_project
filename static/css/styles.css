@@ -53,45 +53,46 @@
   font-family: 'Vazirmatn', Tahoma, sans-serif;
 }
 
+/* تنظیم پس‌زمینه کل صفحه (فضای خالی اطراف در تبلت) */
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-color: var(--bg);
+  height: 100vh; /* ارتفاع پایه */
+  height: var(--tg-viewport-stable-height, 100vh); /* قفل شدن با ارتفاع تلگرام */
+  overflow: hidden !important; /* گرفتن اسکرول از کل صفحه برای جلوگیری از تغییر سایز پنجره */
+  background-color: #f4f5f7 !important;
 }
 
 body {
+  background-color: #f4f5f7 !important; /* رنگ فضای خالی اطراف */
   display: flex;
-  justify-content: center; /* قرار دادن دقیق مینی‌اپ در وسط بستر بزرگ */
+  justify-content: center; /* قرار دادن کانتینر در مرکز */
   align-items: flex-start;
-  min-height: 100vh;
-  margin: 0;
-  background-color: transparent !important;
 }
 
+/* اگر داخل وب‌ویوی تلگرام است */
 html {
-  /* تنظیم رنگ بستر پیام‌رسان بله به یک رنگ متفاوت برای جداسازی مینی‌اپ */
-  background-color: var(--tg-theme-secondary-bg-color, #e5e7eb) !important;
+  background-color: var(--tg-theme-secondary-bg-color, #f4f5f7);
 }
 
 /* =========================================
    3. لی‌آوت اصلی و نویگیشن
 ========================================= */
-.app-container {
-  width: 100% !important;
-  box-shadow: 0 0 25px rgba(0,0,0,0.15) !important;
-  max-width: 400px !important; /* قفل کردن عرض دقیق موبایل */
-  min-height: 100vh;
-  background-color: #fff;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 0 20px rgba(0,0,0,0.15); /* سایه برای جدا شدن از پس‌زمینه دسکتاپ */
-  margin: 0 auto !important; /* وسط‌چین کردن اجباری */
-  overflow-x: hidden;}
 
-/* هدر */
+/* قفل کردن اپلیکیشن در وسط صفحه با ظاهر یک گوشی موبایل */
+.app-container {
+  width: 100%;
+  max-width: 480px !important;
+  background-color: #ffffff;
+  height: 100%; /* گرفتن تمام ارتفاع ثابت صفحه */
+  overflow-y: auto; /* فعال کردن اسکرول فقط در داخل کانتینر گوشی */
+  overflow-x: hidden;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08) !important;
+}
+
+/* هدر اصلی (خانه و دسته‌بندی‌ها) */
 .app-header {
   position: sticky;
   top: 0;
@@ -104,6 +105,8 @@ html {
   justify-content: space-between;
   padding: 0 14px;
   box-shadow: 0 2px 12px rgba(0,163,135,0.25);
+  /* مهم: حذف مقادیر fixed و transform تا هدر سر جای خودش بماند */
+  width: 100%;
 }
 
 .header-left, .header-right {
@@ -117,6 +120,7 @@ html {
 
 .logo-text { font-weight: 700; font-size: 19px; letter-spacing: -0.3px; }
 
+/* دکمه‌های عمومی هدر (سفید) */
 .cart-icon, .back-button {
   background: none; border: none; color: #fff; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -131,21 +135,21 @@ html {
 .main-content {
   flex: 1;
   width: 100%;
-  min-width: 0; /* !!! این خط بسیار مهم است: جلوگیری از کشیده شدن توسط اسلایدرها !!! */
+  min-width: 0; 
   padding: 12px;
   padding-bottom: 120px !important;
   background-color: #f8f9fa;
   overflow-x: hidden;
 }
 
-/* نوار ناوبری پایین */
+/* نوار ناوبری پایین (شناور) */
 .bottom-nav {
   position: fixed; 
   bottom: 0; 
   left: 50% !important; 
-  transform: translateX(-50%) !important;
+  transform: translateX(-50%) !important; /* حفظ مرکز در صفحات بزرگ */
   width: 100% !important; 
-  max-width: 400px !important; /* قفل کردن عرض نوار پایین */
+  max-width: 480px !important; /* هماهنگ با کانتینر اصلی */
   height: 65px; 
   background: #ffffff;
   border-top: 1px solid #e8e8e8; 
@@ -158,13 +162,13 @@ html {
 
 .nav-item {
   flex: 1;
-  height: 100%; /* گرفتن کل ارتفاع برای تراز شدن */
+  height: 100%; 
   border: none;
   background: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* تراز کردن محتوا در مرکز */
+  justify-content: center; 
   gap: 2px;
   cursor: pointer;
   color: var(--text-light);
@@ -207,8 +211,9 @@ html {
   transform: translateY(0);
 }
 
+/* کاهش شدت انیمیشن‌ها برای موبایل */
 .category-card:active .category-image {
-  transform: scale(1.15) rotate(3deg); /* چرخش و زوم ملایم برای القای حس کلیک */
+  transform: scale(1.05); /* از 1.15 به 1.05 کاهش یافت */
   transition: transform 0.2s ease;
 }
 
@@ -218,31 +223,24 @@ html {
   background-size: cover; 
   background-position: center; 
   border-radius: 0 var(--radius) var(--radius) 0; 
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 0.3s ease;
 }
 
-.category-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-}
-
-.category-card:hover .category-image {
-  transform: scale(1.08);
+/* هاور فقط در دسکتاپ اعمال شود تا در موبایل گیر نکند */
+@media (min-width: 768px) {
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    .category-card:hover .category-image {
+      transform: scale(1.05);
+    }
 }
 
 .category-card:active {
-  transform: translateY(2px) scale(0.96);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  transform: scale(0.98); /* ساده سازی افکت لمس */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-
-.category-card.card-clicked {
-  transform: scale(0.96); /* کل کارت کمی جمع می‌شود */
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-
-.category-card.card-clicked .category-image {
-  transform: scale(1.15); /* همزمان تصویر داخل کارت زوم می‌شود */
-}   
 
 .category-info { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 14px 16px; gap: 4px; }
 .category-label { font-size: 15.5px; font-weight: 700; color: var(--text-dark); }
@@ -267,7 +265,6 @@ html {
 
 .product-label { padding: 9px 10px; text-align: center; font-size: 13.5px; font-weight: 500; color: var(--text-dark); background: var(--card-bg); }
 
-/* استایل عکس ناموجود و خالی بودن */
 .product-image.no-image::after, .category-image.no-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #e0e0e0 0%, #cfcfcf 100%); display: flex; align-items: center; justify-content: center; }
 .product-image.no-image::before, .category-image.no-image::before { content: '🖼'; position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; opacity: 0.35; }
 .empty-state { text-align: center; padding: 48px 16px; color: var(--text-light); font-size: 14px; }
@@ -307,248 +304,145 @@ html {
   z-index: 2; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 .fade-in { animation: fadeIn 0.3s ease both; }
 
-@media (min-width: 481px) {
-    body {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        border-left: 1px solid var(--tg-theme-hint-color, #ccc);
-        border-right: 1px solid var(--tg-theme-hint-color, #ccc);
-    }
-}
 /* =========================================
    6. جستجو (Search Overlay)
 ========================================= */
 .search-overlay { 
   position: fixed; 
   top: 0; 
+  /* هماهنگی با کانتینر اصلی در حالت تبلت */
   left: 50% !important; 
-  transform: translateX(-50%) translateY(100%) !important; 
   width: 100% !important; 
-  max-width: 400px !important; /* قفل کردن عرض صفحه سرچ */
+  max-width: 480px !important; 
+  transform: translateX(-50%) translateY(100%) !important; 
   height: 100%; 
   background: #f5f5f5; 
   z-index: 10000; 
-  transition: transform 0.3s ease; 
+  transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); 
+  pointer-events: none;
+  visibility: hidden;
   display: flex; 
   flex-direction: column; 
 }
-.search-overlay.open {transform: translateX(-50%) translateY(0) !important;}
-.search-header {
-  padding: 15px; display: flex; gap: 12px; align-items: center;
-  background: #fff; border-bottom: 1px solid #e8e8e8;
+
+.search-overlay.open {
+  transform: translateX(-50%) translateY(0) !important;
+  pointer-events: auto; /* فعال شدن کلیک */
+  visibility: visible;  /* نمایان شدن */
 }
+
+.search-header {
+  padding: 15px; 
+  display: flex; 
+  gap: 12px; 
+  align-items: center;
+  background: #fff; 
+  border-bottom: 1px solid #e8e8e8;
+}
+
+/* تیره کردن دکمه برگشت در سرچ (برای خوانایی روی پس‌زمینه سفید) */
+.search-header .back-button,
+.search-header button {
+  color: #333333 !important; 
+  background: transparent;
+  padding: 5px;
+}
+.search-header .back-button svg {
+    stroke: #333333 !important;
+}
+
 .search-input-wrapper { flex: 1; }
+
 .search-input {
   width: 100%; padding: 12px 15px; background: #f0f0f0; border: 1px solid transparent;
-  border-radius: 12px; font-size: 14px; color: var(--text-dark); outline: none;
+  border-radius: 12px; font-size: 14px; color: var(--text-dark, #333); outline: none;
 }
-.search-input:focus { border-color: var(--primary); background: #fff; }
+.search-input:focus { border-color: var(--primary, #00B894); background: #fff; }
 .search-results { flex: 1; overflow-y: auto; padding: 15px; align-content: start; }
 
+
 /* =========================================
-   7. صفحه محصول (کاتالوگ)
+   7. صفحه محصول (کاتالوگ) و جستجو لایو
 ========================================= */
 .product-page-body { background: #f8f9fa; }
-.main-content.no-padding { padding: 0 !important; padding-bottom: 70px !important; }
+.main-content.no-padding { padding: 0 !important; padding-bottom: 70px !important; margin-top: 0 !important;}
 
-.app-header.transparent {
-    background: transparent !important; box-shadow: none !important;
-    position: absolute; top: 0; width: 100%; z-index: 20; padding: 10px 15px;
+/* هدر اختصاصی و فاصله‌های صفحه محصول و پیشنهاد ویژه */
+.app-header.product-header,
+.app-header[style*="background: #fff"] {
+    background: #fff !important;
+    color: var(--text-dark) !important;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
+    height: 60px;
+    padding: 0 15px;
+    /* این هدر هم داخل کانتینر است پس نباید fixed/absolute باشد */
 }
-.back-button.circle {
-    background: rgba(255, 255, 255, 0.95); color: #1a1a2e; border-radius: 50%;
-    width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none; cursor: pointer;
-}
+.app-header.product-header .logo-text { text-shadow: none !important; }
 
-.product-gallery-wrapper { position: relative; width: 100%; background: #e8e8e8; }
+/* دکمه‌های بازگشت اختصاصی در هدرهای سفید */
+.back-button-alt {
+    display: flex; align-items: center; gap: 4px; background: none; border: none;
+    color: #333333; font-weight: 700; font-size: 14px; cursor: pointer; padding: 0;
+}
+.back-button-alt svg { width: 24px; height: 24px; stroke: #333333 !important; }
+
+.product-gallery-wrapper { position: relative; width: 100%; background: #e8e8e8; line-height: 0; padding-top: 0 !important; margin-top: -1px; display: block;}
+
 .gallery-scroll-container { 
     display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
     scrollbar-width: none; scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch; user-select: none; -webkit-user-select: none;
+    margin: 0; padding: 0; cursor: grab;
 }
 .gallery-scroll-container::-webkit-scrollbar { display: none; }
 .gallery-scroll-container.grabbing * { pointer-events: none !important; }
 
-.gallery-slide { flex: 0 0 100%; scroll-snap-align: center; height: 380px; }
-.gallery-media { width: 100%; height: 100%; background-size: cover; background-position: center; object-fit: cover; background-color: #f8f9fa; background-repeat: no-repeat; }
+.gallery-slide { 
+    flex: 0 0 100%; min-width: 100%; width: 100%; height: 380px; 
+    scroll-snap-align: center !important; scroll-snap-stop: always; 
+    display: flex; justify-content: center; align-items: center; margin: 0; padding: 0; 
+}
+.gallery-media { 
+    width: 100%; height: 100%; background-size: cover; background-position: center; 
+    object-fit: cover; background-color: #f8f9fa; background-repeat: no-repeat;
+    pointer-events: none; -webkit-user-drag: none; user-select: none;
+}
+video.gallery-media { pointer-events: auto; }
 
 .gallery-counter {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  backdrop-filter: blur(4px);
-  line-height: 1.5; /* بازگرداندن لاین‌هایت برای متن شمارنده */
+  position: absolute; bottom: 15px; left: 15px; background: rgba(0, 0, 0, 0.6);
+  color: #fff; padding: 5px 14px; border-radius: 20px; font-size: 12px;
+  font-weight: 700; backdrop-filter: blur(4px); line-height: 1.5; 
 }
 
 .gallery-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0; background: #fff; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #e0e0e0; transition: all 0.3s ease; cursor: pointer; }
 .dot.active { background: #1e293b; width: 20px; border-radius: 4px; }
 
-.product-details-container {
-  padding: 20px 20px 100px; /* افزایش فاصله پایین به 100 پیکسل برای جلوگیری از هم‌پوشانی */
-  background: #fff;
-  line-height: 1.5;
-}
+.product-details-container { padding: 20px 20px 100px; background: #fff; line-height: 1.5; }
 
 .p-detail-title { font-size: 19px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; line-height: 1.5; }
 .details-divider { height: 1px; background: #f0f0f0; margin: 24px 0; }
 
-.p-action-btn {
-    display: flex; justify-content: center; align-items: center;
-    padding: 16px; border-radius: 16px; text-decoration: none;
-    font-weight: 700; font-size: 14.5px; transition: transform 0.1s;
-    width: 100%; box-sizing: border-box;
-}
+.p-action-btn { display: flex; justify-content: center; align-items: center; padding: 16px; border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 14.5px; transition: transform 0.1s; width: 100%; box-sizing: border-box; }
 .p-action-btn:active { transform: scale(0.98); }
 .primary-navy { background: #1e293b; color: #fff; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.25); }
 .secondary-sky { background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; }
 
-.section-desc { font-size: 13px; color: #64748b; line-height: 1.7; margin-bottom: 16px; }
 .empty-state-text { font-size: 13px; color: #94a3b8; background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center; border: 1px dashed #cbd5e1; }
 
 .horizontal-scroll-works { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 5px; }
 .horizontal-scroll-works::-webkit-scrollbar { display: none; }
-.executed-work-item {
-    flex: 0 0 110px; height: 110px; border-radius: 16px;
-    background-size: cover; background-position: center; background-color: #e8e8e8;
-    scroll-snap-align: start; box-shadow: var(--shadow-sm); border: 1px solid #f0f0f0;
-}
-.action-buttons-group { display: flex; flex-direction: column; gap: 12px; }
-
-/* =========================================
-   اصلاح نهایی رفتار اسکرول (کاتالوگ)
-========================================= */
-
-/* =========================================
-   اصلاح نهایی و یکپارچه رفتار اسکرول و کاتالوگ
-========================================= */
-.gallery-scroll-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory; 
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    cursor: grab;
-    margin: 0;
-    padding: 0;
-}
-
-.gallery-scroll-container::-webkit-scrollbar { display: none; }
-.gallery-scroll-container.grabbing * { pointer-events: none !important; }
-
-.gallery-slide {
-    min-width: 100%;
-    width: 100%;
-    height: 380px;
-    scroll-snap-align: center !important; 
-    scroll-snap-stop: always; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.gallery-media {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-    -webkit-user-drag: none;
-    user-select: none;
-}
-video.gallery-media { pointer-events: auto; }
-
-/* جلوگیری از سلکت شدن متن در درگ */
-.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card, .nav-item, .product-card {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-user-drag: none;
-}
-
-/* اصلاح چسبندگی‌ها */
-#discounted-products-scroll { scroll-snap-type: none !important; cursor: grab; }
-#galleryContainer { scroll-snap-type: x mandatory !important; cursor: grab; }
-.h-discount-card { scroll-snap-align: none !important; }
-
-/* هدر اختصاصی و فاصله‌های صفحه محصول */
-.app-header.product-header {
-    background: #fff !important;
-    color: var(--text-dark) !important;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-}
-.app-header.product-header .logo-text { text-shadow: none !important; }
-
-.main-content.no-padding {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
-.product-gallery-wrapper {
-    position: relative;
-    width: 100%;
-    background: #fff;
-    line-height: 0;
-    padding-top: 0 !important; 
-    margin-top: -1px; 
-    display: block;
-}
-
-/* استایل‌های دکمه بازگشت یکپارچه */
-.back-button {
-    color: #ffffff !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-.product-header .back-button { color: #000000 !important; }
-.back-button svg { width: 24px; height: 24px; transform: none; }
-
-.back-button-alt {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: none;
-    border: none;
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0;
-}
-.back-button-alt svg { width: 20px; height: 20px; }
+.executed-work-item { flex: 0 0 110px; height: 110px; border-radius: 16px; background-size: cover; background-position: center; background-color: #e8e8e8; scroll-snap-align: start; box-shadow: var(--shadow-sm); border: 1px solid #f0f0f0; cursor: zoom-in; }
 
 /* دسته‌بندی و دکمه‌های صفحه محصول */
 .category-wrapper { margin-top: 8px; display: flex; flex-direction: column; gap: 2px; }
 .cat-label { font-size: 12px; color: #888; }
 .cat-value { font-size: 16px; font-weight: bold; color: var(--primary-dark); }
-.cat-sub-value { font-size: 14px; color: #555; background: #f5f5f5; display: inline-block; padding: 2px 8px; border-radius: 4px; width: fit-content; margin-top: 4px; }
 
 .action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
 .p-btn-new { display: flex; align-items: center; justify-content: center; padding: 14px 5px; border-radius: 12px; text-decoration: none; font-size: 12.5px; font-weight: 700; transition: all 0.2s ease; text-align: center; }
@@ -562,7 +456,6 @@ video.gallery-media { pointer-events: auto; }
 .modal.show .modal-content { transform: scale(1); }
 .modal.show { display: flex; }
 .close-modal { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 35px; font-weight: bold; }
-.gallery-slide img, .executed-work-item { cursor: zoom-in; }
 
 /* جستجوی زنده */
 .suggestions-box { position: absolute; top: 55px; left: 0; width: 100%; background: #fff; border-radius: 12px; z-index: 1000; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 450px; overflow-y: auto; padding: 10px; }
@@ -571,3 +464,9 @@ video.gallery-media { pointer-events: auto; }
 .search-suggestion-card:active { transform: scale(0.97); box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
 .search-suggestion-info { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 12px 15px; }
 .search-suggestion-img { width: 120px; background-size: cover; background-position: center; background-color: #f8f8f8; }
+
+/* جلوگیری از سلکت شدن متن در درگ */
+.horizontal-scroll, .gallery-scroll-container, .category-card, .h-discount-card, .nav-item, .product-card {
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    -webkit-touch-callout: none; -webkit-user-drag: none;
+}

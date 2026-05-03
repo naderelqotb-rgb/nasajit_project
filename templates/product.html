@@ -9,17 +9,18 @@
 </head>
 <body class="product-page-body">
   <div class="app-container">
-
-    <header class="app-header product-header">
-      <button class="back-button-alt" onclick="history.back()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        بازگشت
+    <header class="app-header product-header" style="position: relative; display: flex; align-items: center; padding: 15px; background: #fff; min-height: 60px;">
+      <button class="back-button-alt" onclick="history.back()" style="background: transparent; border: none; cursor: pointer; padding: 5px; display: flex; z-index: 10;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
       </button>
-      <div class="header-logo"><span class="logo-text" style="color: var(--text-dark);">جزئیات پارچه</span></div>
+      <div class="header-logo" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; z-index: 1; margin: 0;">
+        <span class="logo-text" style="color: var(--text-dark, #000); font-size: 18px; font-weight: bold;">جزئیات پارچه</span>
+      </div>
     </header>
 
     <main class="main-content no-padding">
-      
       <div class="product-gallery-wrapper">
         <div class="gallery-scroll-container" id="galleryContainer">
           {% if product.main_image %}
@@ -27,7 +28,6 @@
             <div class="gallery-media" style="background-image: url('{{ product.main_image.url }}');"></div>
           </div>
           {% endif %}
-
           {% for item in product.gallery.all %}
           <div class="gallery-slide">
             <div class="gallery-media" style="background-image: url('{{ item.image.url }}');"></div>
@@ -41,7 +41,7 @@
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
             <h1 class="p-detail-title" style="margin-bottom: 0;">{{ product.name }}</h1>
             {% if product.discount %}
-                <span class="h-discount-badge" style="position: static; box-shadow: none; font-size: 13px; padding: 4px 10px;">{{ product.discount }}</span>
+                <span class="h-discount-badge persian-number" style="position: static; box-shadow: none; font-size: 13px; padding: 4px 10px;">{{ product.discount }}</span>
             {% endif %}
         </div>
         
@@ -93,6 +93,27 @@
       </div>
     </main>
 
+    <!-- ========================================== -->
+    <!-- بلوک پنجره جستجو -->
+    <!-- ========================================== -->
+    <div id="searchOverlay" class="search-overlay">
+      <div class="search-header">
+        <button class="back-button" onclick="toggleSearch(false)">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="search-input-wrapper" style="position: relative; width: 100%;">
+          <form action="{% url 'search' %}" method="GET" style="width: 100%;">
+            <input type="text" name="q" id="searchInput" class="search-input" placeholder="جستجوی پارچه..." autocomplete="off" oninput="liveSearch(this.value)">
+          </form>
+          
+          <div id="suggestions-box" class="suggestions-box">
+            <div class="suggestions-list" id="suggestions-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- منوی نویگیشن پایین -->
     <nav class="bottom-nav">
       <button class="nav-item" onclick="location.href='{% url 'special_offers' %}'">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
@@ -108,6 +129,7 @@
       </button>
     </nav>
 
+    <!-- مُدال (پاپ‌آپ) نمایش تصاویر نمونه کار -->
     <div id="imageModal" class="modal" onclick="closeModal()">
       <span class="close-modal">&times;</span>
       <img class="modal-content" id="modalImage">
@@ -116,19 +138,61 @@
   </div>
 
   <script src="{% static 'js/app.js' %}"></script>
+  
   <script>
+    // توابع مُدال (باز و بسته کردن عکس نمونه کار)
     function openModal(imgSrc) {
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalImage');
-        modal.style.display = "flex";
-        modalImg.src = imgSrc;
-        setTimeout(() => modal.classList.add('show'), 10);
+        if(modal && modalImg){
+            modal.style.display = "flex";
+            modalImg.src = imgSrc;
+            setTimeout(() => modal.classList.add('show'), 10);
+        }
     }
 
     function closeModal() {
         const modal = document.getElementById('imageModal');
-        modal.classList.remove('show');
-        setTimeout(() => modal.style.display = "none", 300);
+        if(modal){
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = "none", 300);
+        }
+    }
+
+    // تابع جستجوی زنده
+    function liveSearch(query) {
+        const box = document.getElementById('suggestions-box');
+        const container = document.getElementById('suggestions-container');
+        if (!box || !container) return;
+        
+        if (query.length < 1) { 
+            box.style.display = 'none'; 
+            return; 
+        }
+
+        fetch('/live-search/?q=' + query)
+        .then(response => response.json())
+        .then(data => {
+            container.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(item => {
+                    container.innerHTML += `
+                      <div class="search-suggestion-card" onclick="location.href='${item.url}'">
+                        <div class="search-suggestion-info">
+                          <div style="font-weight: bold; font-size: 15px; color: #1a1a2e;">${item.name}</div>
+                          <div style="font-size: 12px; color: #888; margin-top: 4px;">مشاهده جزئیات</div>
+                        </div>
+                        <div class="search-suggestion-img" style="background-image: url('${item.image}')"></div>
+                      </div>`;
+                });
+                box.style.display = 'block';
+            } else { 
+                box.style.display = 'none'; 
+            }
+        })
+        .catch(error => {
+            console.error('خطا در جستجو:', error);
+        });
     }
   </script>
 </body>

@@ -6,6 +6,8 @@
   <title>نساجیت - کاتالوگ دیجیتال</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <!-- اسکریپت تلگرام در پس‌زمینه لود می‌شود تا سایت را کند نکند -->
+  <script src="{% static 'js/telegram-web-app.js' %}  " async></script>
 </head>
 <body>
   <div class="app-container">
@@ -55,14 +57,15 @@
       </section>
     </main>
 
-    <div id="search-overlay" class="search-overlay">
+    <!-- بلوک جستجو (آیدی‌ها اصلاح شدند) -->
+    <div id="searchOverlay" class="search-overlay">
       <div class="search-header">
-        <button class="back-button" onclick="toggleSearch(false)" style="color:var(--text-dark)">
+        <button class="back-button" onclick="toggleSearch(false)">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
         <div class="search-input-wrapper" style="position: relative; width: 100%;">
           <form action="{% url 'search' %}" method="GET" style="width: 100%;">
-            <input type="text" name="q" id="search-input" class="search-input" placeholder="جستجوی پارچه..." autocomplete="off" oninput="liveSearch(this.value)">
+            <input type="text" name="q" id="searchInput" class="search-input" placeholder="جستجوی پارچه..." autocomplete="off" oninput="liveSearch(this.value)">
           </form>
           
           <div id="suggestions-box" class="suggestions-box">
@@ -88,34 +91,36 @@
         <span>خانه</span>
       </button>
     </nav>
-
-    <script src="{% static 'js/app.js' %}"></script>
-    <script>
-      function liveSearch(query) {
-          const box = document.getElementById('suggestions-box');
-          const container = document.getElementById('suggestions-container');
-          if (query.length < 1) { box.style.display = 'none'; return; }
-
-          fetch('/live-search/?q=' + query)
-          .then(response => response.json())
-          .then(data => {
-              container.innerHTML = '';
-              if (data.length > 0) {
-                  data.forEach(item => {
-                      container.innerHTML += `
-                        <div class="search-suggestion-card" onclick="location.href='${item.url}'">
-                          <div class="search-suggestion-info">
-                            <div style="font-weight: bold; font-size: 15px; color: #1a1a2e;">${item.name}</div>
-                            <div style="font-size: 12px; color: #888; margin-top: 4px;">مشاهده جزئیات</div>
-                          </div>
-                          <div class="search-suggestion-img" style="background-image: url('${item.image}')"></div>
-                        </div>`;
-                  });
-                  box.style.display = 'block';
-              } else { box.style.display = 'none'; }
-          });
-      }
-    </script>
   </div>
+  
+  <script src="{% static 'js/app.js' %}"></script>
+  
+  <script>
+    // اسکریپت جستجوی زنده
+    function liveSearch(query) {
+        const box = document.getElementById('suggestions-box');
+        const container = document.getElementById('suggestions-container');
+        if (query.length < 1) { box.style.display = 'none'; return; }
+
+        fetch('/live-search/?q=' + query)
+        .then(response => response.json())
+        .then(data => {
+            container.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(item => {
+                    container.innerHTML += `
+                      <div class="search-suggestion-card" onclick="location.href='${item.url}'">
+                        <div class="search-suggestion-info">
+                          <div style="font-weight: bold; font-size: 15px; color: #1a1a2e;">${item.name}</div>
+                          <div style="font-size: 12px; color: #888; margin-top: 4px;">مشاهده جزئیات</div>
+                        </div>
+                        <div class="search-suggestion-img" style="background-image: url('${item.image}')"></div>
+                      </div>`;
+                });
+                box.style.display = 'block';
+            } else { box.style.display = 'none'; }
+        });
+    }
+  </script>
 </body>
 </html>
